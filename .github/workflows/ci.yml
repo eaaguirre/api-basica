@@ -23,10 +23,10 @@ jobs:
       - name: Definir etiqueta semántica
         id: version_tag
         run: |
-          # Obtener la versión semántica desde el último tag en Git
-          VERSION=$(git describe --tags --abbrev=0)
-          # Guardar la etiqueta en una variable de entorno
-          echo "TAG=${VERSION}" >> $GITHUB_ENV
+            # Verificar si hay etiquetas
+            VERSION=$(git describe --tags --abbrev=0 || echo "v0.0.0") # Si no hay etiquetas, usar v0.0.0
+            echo "TAG=${VERSION}" >> $GITHUB_ENV
+
 
       - name: Ejecutar tests
         run: npm test
