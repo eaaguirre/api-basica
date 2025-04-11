@@ -42,9 +42,13 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Construir imagen Docker
-        run: docker build -t "${{ secrets.DOCKER_USERNAME }}/api-basica:${{ env.TAG || 'latest' }}" .
+        env:
+          TAG: ${{ env.TAG }}  # Pasar TAG como una variable de entorno al paso
+        run: docker build -t "${{ secrets.DOCKER_USERNAME }}/api-basica:${{ env.TAG }}" .
 
       - name: Subir imagen a Docker Hub
+        env:
+          TAG: ${{ env.TAG }}
         run: docker push "${{ secrets.DOCKER_USERNAME }}/api-basica:${{ env.TAG }}"
 
       - name: Hacer deploy a WSL vía Serveo con contraseña
