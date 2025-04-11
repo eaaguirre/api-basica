@@ -19,6 +19,16 @@ jobs:
 
       - name: Instalar dependencias
         run: npm install
+        # Paso 4: Definir etiqueta semántica (Versión de git)
+      - name: Definir etiqueta semántica
+        id: version_tag
+        run: |
+        # Obtener la versión semántica desde el último tag en Git
+        VERSION=$(git describe --tags --abbrev=0)
+        
+        # Guardar la etiqueta en una variable de entorno
+        echo "TAG=${VERSION}" >> $GITHUB_ENV
+        
 
       - name: Ejecutar tests
         run: npm test
@@ -35,10 +45,10 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Construir imagen Docker
-        run: docker build -t "${{ secrets.DOCKER_USERNAME }}"/api-basica .
+        run: docker build -t "${{ secrets.DOCKER_USERNAME }}"/api-basica:${{ env.TAG }} .
 
       - name: Subir imagen a Docker Hub
-        run: docker push "${{ secrets.DOCKER_USERNAME }}"/api-basica
+        run: docker push "${{ secrets.DOCKER_USERNAME }}"/api-basica:${{ env.TAG }} .
 
       - name: Hacer deploy a WSL vía Serveo con contraseña
         uses: appleboy/ssh-action@v1.0.3
