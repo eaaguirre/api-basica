@@ -20,12 +20,15 @@ jobs:
       - name: Instalar dependencias
         run: npm install
 
+      - name: Traer etiquetas de Git
+        run: git fetch --tags  # Asegura que las etiquetas estén disponibles
+
       - name: Definir etiqueta semántica
         id: version_tag
         run: |
           # Verificar si hay etiquetas
-          VERSION=$(git describe --tags --abbrev=0 || echo "v0.0.0") # Si no hay etiquetas, usar v0.0.0
-          echo "TAG=${VERSION}" >> $GITHUB_ENV
+          VERSION=$(git describe --tags --abbrev=0 || echo "v0.0.0")  # Si no hay etiquetas, usar v0.0.0
+          echo "TAG=${VERSION}" >> $GITHUB_ENV  # Guardar la variable TAG en el entorno
 
       - name: Ejecutar tests
         run: npm test
@@ -38,17 +41,23 @@ jobs:
       - name: Clonar repositorio
         uses: actions/checkout@v3
 
+      - name: Verificar valor de TAG
+        run: echo "TAG=${{ env.TAG }}"
+
       - name: Autenticarse en Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
+      - name: Validar que TAG tenga un valor
+        run: |
+          if [ -z "${{ env.TAG }}" ]; then
+            echo "TAG no tiene un valor válido, asignando valor predeterminado 'latest'."
+            echo "TAG=latest" >> $GITHUB_ENV
+          fi
+
       - name: Construir imagen Docker
-        env:
-          TAG: ${{ env.TAG }}  # Pasar TAG como una variable de entorno al paso
         run: docker build -t "${{ secrets.DOCKER_USERNAME }}/api-basica:${{ env.TAG }}" .
 
       - name: Subir imagen a Docker Hub
-        env:
-          TAG: ${{ env.TAG }}
         run: docker push "${{ secrets.DOCKER_USERNAME }}/api-basica:${{ env.TAG }}"
 
       - name: Hacer deploy a WSL vía Serveo con contraseña
