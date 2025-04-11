@@ -12,6 +12,9 @@ jobs:
       - name: Clonar repositorio
         uses: actions/checkout@v3
 
+      - name: Traer todas las etiquetas de Git
+        run: git fetch --tags  # Asegura que las etiquetas estén disponibles
+
       - name: Instalar Node.js
         uses: actions/setup-node@v3
         with:
@@ -19,9 +22,6 @@ jobs:
 
       - name: Instalar dependencias
         run: npm install
-
-      - name: Traer etiquetas de Git
-        run: git fetch --tags  # Asegura que las etiquetas estén disponibles
 
       - name: Definir etiqueta semántica
         id: version_tag
@@ -42,7 +42,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Verificar valor de TAG
-        run: echo "TAG=${{ env.TAG }}"
+        run: echo "TAG=${{ env.TAG }}"  # Verifica que TAG tenga un valor válido
 
       - name: Autenticarse en Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
