@@ -58,7 +58,7 @@ jobs:
         with:
           image-ref: eaguirre2025/api-basica1
           format: table
-          exit-code: 0
+          exit-code: 1
           severity: HIGH,CRITICAL
 
   build-and-deploy:
