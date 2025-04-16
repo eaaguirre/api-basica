@@ -1,5 +1,5 @@
 # Usar la imagen base de Debian
-FROM node:alpine
+FROM node:23-alpine
 # Continuar con la configuración de tu aplicación
 WORKDIR /app
 COPY package*.json ./
@@ -8,3 +8,4 @@ COPY . .
 
 # Corre los tests durante el build
 RUN npm test
+CMD ["npm", "start"]

@@ -5,7 +5,7 @@ describe('Pruebas de API', () => {
   it('GET / debe responder con Hola Mundo', async () => {
     const res = await request(app).get('/');
     expect(res.statusCode).toBe(200);
-    expect(res.text).toBe('¡Hola Mundo desde Docker desde serveo clase dia 15!');
+    expect(res.text).toBe('¡Hola Mundo desde Docker! Edinson Aguirre');
   });
 
   it('GET /health debe responder con estado ok', async () => {
