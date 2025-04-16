@@ -1,5 +1,5 @@
 # Usar la imagen base de Debian
-FROM node:18
+FROM node:20-alpine
 
 # Actualizar la lista de paquetes e instalar las actualizaciones de seguridad
 RUN apt-get update && apt-get upgrade -y && apt-get dist-upgrade -y && apt-get clean
