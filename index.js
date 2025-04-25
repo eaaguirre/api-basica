@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => res.send('¡Hola Mundo desde Docker! Edinson Aguirre'));
+app.get('/', (req, res) => res.send('¡Hola Mundo desde Docker! Edinson Aguirre 2025'));
 app.get('/health', (req, res) => res.send({ status: 'ok' }));
 
 if (require.main === module) {
